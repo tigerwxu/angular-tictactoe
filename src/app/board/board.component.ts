@@ -29,6 +29,8 @@ export class BoardComponent implements OnInit {
       this.squares[i] = this.player;
       this.xIsNext = !this.xIsNext;
     }
+    
+    this.winner = this.calculateWinner();
   }
 
   /**
