@@ -24,6 +24,9 @@ export class BoardComponent implements OnInit {
   }
 
   makeMove(i: number) {
+    // Stop game if winner already found
+    if (this.winner) return;
+
     // Check if square has been clicked, insert piece if not
     if (!this.squares[i]) {
       this.squares[i] = this.player;
