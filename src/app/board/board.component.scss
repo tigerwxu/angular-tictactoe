@@ -7,7 +7,7 @@
 app-square {
     border: 1px gray solid;
     height: 200px;
-    display: flex;
+    display: flex; //Align the X or O in the centre of the square
     align-items: center;
     justify-content: center;
 }
@@ -18,4 +18,8 @@ h1, h2 {
 
 h2 {
     height: 50px;
+}
+
+button {
+    width: 200px;
 }
