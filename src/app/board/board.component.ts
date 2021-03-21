@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AIService } from '../services/ai.service';
 
 @Component({
   selector: 'app-board',
@@ -12,7 +13,7 @@ export class BoardComponent implements OnInit {
   winner: string;
   turns: number;
 
-  constructor() { }
+  constructor(private ai: AIService) { }
 
   ngOnInit(): void {
     this.newGame();
@@ -31,12 +32,17 @@ export class BoardComponent implements OnInit {
 
     // Check if square has been clicked, insert piece if not
     if (!this.squares[i]) {
+      console.log(this.squares[i])
       this.squares[i] = this.player;
       this.xIsNext = !this.xIsNext;
       this.turns++;
     }
     
     this.winner = this.calculateWinner();
+
+    if (!this.xIsNext && this.turns < 9) {
+      this.makeMove(this.ai.nextMove(this.squares))
+    }
   }
 
   /**
@@ -73,7 +79,7 @@ export class BoardComponent implements OnInit {
 
   get result() {
     if (this.winner) return `Player ${this.winner} won the game!`;
-    if (this.turns === 9) return "The game was a tie!";
+    if (this.turns >= 9) return "The game was a tie!";
     return "";
   }
 
