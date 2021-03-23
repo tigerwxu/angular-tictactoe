@@ -41,7 +41,8 @@ export class BoardComponent implements OnInit {
     this.winner = this.calculateWinner();
 
     if (!this.xIsNext && this.turns < 9) {
-      this.makeMove(this.ai.nextMove(this.squares))
+      debugger
+      this.makeMove(this.ai.makeOptimumMove(this.squares))
     }
   }
 
