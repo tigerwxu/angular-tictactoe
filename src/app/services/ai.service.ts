@@ -38,7 +38,7 @@ export class AIService {
   minimax(board: string[], isMyMove: boolean) {
     // Check if the game is already over
     let score = this.checkWinner(board);
-    if (score) return score;
+    if (score != null) return score;
 
     // If not, recursively minimax till it is over
     let bestMove;
@@ -48,9 +48,15 @@ export class AIService {
         board[i] = isMyMove ? "O" : "X";
         let currScore = this.minimax(board, !isMyMove);
         board[i] = null;
-        // Make the best move depending on whose turn it is
-        if (isMyMove ? currScore > bestScore : currScore < bestScore) {
-          bestScore = currScore;
+        // If it's my move i'll maximise score, opponent will minimise it
+        if (isMyMove) {
+          if (currScore > bestScore) {
+            bestScore = currScore;
+          }
+        } else {
+          if (currScore < bestScore) {
+            bestScore = currScore;
+          }
         }
       }
     }
