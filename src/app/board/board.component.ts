@@ -43,7 +43,6 @@ export class BoardComponent implements OnInit {
 
   aiMove() {
     this.changeDetectorRef.detectChanges(); 
-    debugger;
     this.makeMove(this.ai.makeOptimumMove(this.squares));
   }
 
