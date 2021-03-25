@@ -32,7 +32,6 @@ export class BoardComponent implements OnInit {
 
     // Check if square has been clicked, insert piece if not
     if (!this.squares[i]) {
-      console.log(this.squares[i])
       this.squares[i] = this.player;
       this.xIsNext = !this.xIsNext;
       this.turns++;
