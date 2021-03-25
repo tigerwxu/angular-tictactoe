@@ -1,5 +1,11 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { AIService } from '../services/ai.service';
+
+enum GameMode {
+  pvp,
+  pvc
+} 
 
 @Component({
   selector: 'app-board',
@@ -13,10 +19,13 @@ export class BoardComponent implements OnInit {
   winner: string;
   turns: number;
 
-  constructor(private ai: AIService, private changeDetectorRef: ChangeDetectorRef) { }
+  gameMode: GameMode;
+
+  constructor(private ai: AIService, private changeDetectorRef: ChangeDetectorRef, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.newGame();
+    this.gameMode = GameMode[this.route.snapshot.url[0].path as keyof typeof GameMode];
   }
 
   newGame() {
@@ -41,8 +50,11 @@ export class BoardComponent implements OnInit {
   }
 
   aiMove() {
-    this.changeDetectorRef.detectChanges(); 
-    this.makeMove(this.ai.makeOptimumMove(this.squares));
+    if (this.gameMode === GameMode.pvc) {
+      this.changeDetectorRef.detectChanges(); 
+      this.makeMove(this.ai.makeOptimumMove(this.squares));
+    }
+    
   }
 
   /**
