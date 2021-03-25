@@ -6,7 +6,7 @@
         <app-square 
             *ngFor="let square of squares; let i = index"
             [value]="square"
-            (click)="makeMove(i)">
+            (click)="makeMove(i); aiMove();">
         </app-square>
     </div>
 

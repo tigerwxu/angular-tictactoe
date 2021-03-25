@@ -64,7 +64,6 @@ export class AIService {
   }
 
   checkWinner(board: string[]) {
-    if (!board.includes(null)) return 0;
     const lines = [
       [0, 1, 2],
       [3, 4, 5],
@@ -85,6 +84,7 @@ export class AIService {
         return board[a] === 'X' ? -1 : 1;
       }
     }
+    if (!board.includes(null)) return 0;
     return null;
   }
 }

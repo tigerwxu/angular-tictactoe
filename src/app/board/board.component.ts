@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AIService } from '../services/ai.service';
 
 @Component({
@@ -13,7 +13,7 @@ export class BoardComponent implements OnInit {
   winner: string;
   turns: number;
 
-  constructor(private ai: AIService) { }
+  constructor(private ai: AIService, private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.newGame();
@@ -39,11 +39,12 @@ export class BoardComponent implements OnInit {
     }
     
     this.winner = this.calculateWinner();
+  }
 
-    if (!this.xIsNext && this.turns < 9) {
-      debugger
-      this.makeMove(this.ai.makeOptimumMove(this.squares))
-    }
+  aiMove() {
+    this.changeDetectorRef.detectChanges(); 
+    debugger;
+    this.makeMove(this.ai.makeOptimumMove(this.squares));
   }
 
   /**
