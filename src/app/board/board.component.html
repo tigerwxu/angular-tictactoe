@@ -1,14 +1,15 @@
 <div class="wrapper">
-    <h1>Current Player: {{ player }} </h1>
+    <h1>Current Player: {{ nextPlayer }} </h1>
     <h2>{{ result }}</h2>
 
     <div class="grid">
         <app-square 
-            *ngFor="let square of squares; let i = index"
+            *ngFor="let square of board; let i = index"
             [value]="square"
-            (click)="makeMove(i); aiMove();">
+            (click)="makeMove(i)">
         </app-square>
     </div>
 
     <button class="btn btn-primary mt-4" (click)="newGame()">Restart Game</button>
+    <button class="btn btn-secondary" (click)="aiMove()">Make AI Move</button>
 </div>
