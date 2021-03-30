@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AIService } from '../services/ai.service';
 
 enum GameMode
 {
@@ -56,7 +55,7 @@ export class BoardComponent implements OnInit
     {
         if (this.gameMode === GameMode.pvc)
         {
-            this.cpuRandomMove();
+            this.cpuOptimumMove();
         }
     }
 
@@ -129,87 +128,60 @@ export class BoardComponent implements OnInit
     /**
      * Makes the optimal move using the minimax algorithm for the current player
      */
-    // cpuOptimumMove()
-    // {
-    //     let bestMove;
-    //     let bestScore = -Infinity;
+    cpuOptimumMove()
+    {
+        let bestMove;
+        let bestScore = -Infinity;
 
-    //     const minimax = (maximising: boolean) =>
-    //     {
-    //         const currentPlayer = maximising ? this.nextPlayer : 
-    //         let score = maximising ? -Infinity : Infinity;
-    //         // Return the score if the game has ended
-    //         switch(this.checkWinner())
-    //         {
-    //             case this.nextPlayer:
-    //                 return 1;
-    //             case "TIE":
-    //                 return 0;
-    //             case null:
-    //                 break;
-    //             default:
-    //                 return -1;
-    //         }
+        for (let i = 0; i < this.board.length; i++)
+        {
+            if (this.board[i] === null) // Check each possible next move
+            {
+                this.board[i] = this.nextPlayer;
+                let currScore = this.minimax(false, 1); // Next turn will be opponent's
+                this.board[i] = null;
+                if (currScore > bestScore)
+                { // If this move is the best so far, remember it
+                    bestScore = currScore;
+                    bestMove = i;
+                }
+            }
+        }
 
-    //         for (let i = 0; i < this.board.length; i++) 
-    //         {
-    //             if (this.board[i] === null) // Check each possible next move
-    //             {
-    //                 this.board[i] = 
-    //             }
-    //         }
-    //     }
-    // }
+        this.makeMove(bestMove);
+    }
 
-    //     for (let i = 0; i < this.board.length; i++)
-    //     {
-    //         if (this.board[i] === null) // Check each possible next move
-    //         {
-    //             this.board[i] = this.player;
-    //             let currScore = minimax(false); // Check how optimal this move is
-    //             this.board[i] = null;
-    //             if (currScore > bestScore)
-    //             { // If this move is the best so far, remember it
-    //                 bestScore = currScore;
-    //                 bestMove = i;
-    //             }
-    //         }
-    //     }
+    private minimax(maximising: boolean, depth: number)
+    {
+        const currentPlayer = maximising ? this.nextPlayer : this.waitingPlayer;
+        let score = maximising ? -Infinity : Infinity;
+        // Return the score if the game has ended
+        switch(this.checkWinner())
+        {
+            case this.nextPlayer:
+                return 100;
+            case "TIE":
+                return 0;
+            case null:
+                break;
+            default:
+                return -100;
+        }
 
-
-
-    // function minimax(board: string[], isMyMove: boolean)
-    // {
-    //     // Check if the game is already over
-    //     let score = this.checkWinner(board);
-    //     if (score != null) return score;
-
-    //     // If not, recursively minimax till it is over
-    //     let bestMove;
-    //     let bestScore = isMyMove ? -Infinity : Infinity;
-    //     for (let i = 0; i < board.length; i++)
-    //     {
-    //         if (!board[i])
-    //         {
-    //             board[i] = isMyMove ? "O" : "X";
-    //             let currScore = this.minimax(board, !isMyMove);
-    //             board[i] = null;
-    //             // If it's my move i'll maximise score, opponent will minimise it
-    //             if (isMyMove)
-    //             {
-    //                 if (currScore > bestScore)
-    //                 {
-    //                     bestScore = currScore;
-    //                 }
-    //             } else
-    //             {
-    //                 if (currScore < bestScore)
-    //                 {
-    //                     bestScore = currScore;
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     return bestScore;
-    // }
+        //Otherwise, recursively call minimax until the game does end
+        let bestScore = maximising ? -Infinity : Infinity;
+        for (let i = 0; i < this.board.length; i++) 
+        {
+            if (this.board[i] === null) // Check each possible next move
+            {
+                this.board[i] = currentPlayer;
+                const currScore = this.minimax(!maximising, depth + 1);
+                // Keep highest score if maximising (my turn), lowest score if minimising (opponent turn)
+                // Depth is added to the score to prefer shorter game if outcome is the same
+                bestScore = maximising ? Math.max(bestScore, currScore - depth) : Math.min(bestScore, currScore + depth);
+                this.board[i] = null;
+            }
+        }
+        return bestScore;
+    }
 }
